@@ -1,6 +1,7 @@
 // services/agreement.service.js
 const PDFDocument = require("pdfkit");
 const COMPANY = require("../config/company");
+const path = require("path");
 
 function formatDate(date) {
   const d = new Date(date);
@@ -18,7 +19,7 @@ async function generateUserAgreementBuffer(submission, ipAddress) {
     doc.on("data", (chunk) => chunks.push(chunk));
     doc.on("end", () => resolve(Buffer.concat(chunks)));
 
-    const blue = "#43a9a8node preview-agreement.js";
+    const blue = "#bd24df  node preview-agreement.js";
     const gray = "#333";
     const lightGray = "#555";
     const bold = "Helvetica-Bold";
@@ -41,16 +42,33 @@ async function generateUserAgreementBuffer(submission, ipAddress) {
 
 
     const headerHeight = 100;
+    const logoPath = path.join(__dirname, "../assets/logo.png");
+
+
+
+
+    // Create linear gradient
+const gradient = doc.linearGradient(0, 0, doc.page.width, 0);
+gradient.stop(0, "#bd24df"); // Purple
+gradient.stop(1, "#2d6ade"); // Blue
 
 // Background
-doc.rect(0, 0, doc.page.width, headerHeight).fill(blue);
+doc.rect(0, 0, doc.page.width, headerHeight).fill(gradient);
+
+
+
+// LEFT — LOGO
+doc.image(logoPath, leftMargin, 20, {
+  width: 90,
+  align: "left",
+});
 
 // LEFT — COMPANY NAME (VERTICALLY CENTERED)
 doc
   .fill("#fff")
   .font(bold)
   .fontSize(15)
-  .text("StockwiseIq.", leftMargin, headerHeight / 2 - 10);
+  .text("", leftMargin, headerHeight / 2 - 10);
 
 // RIGHT — REGISTRATION BLOCK
 const rightBoxWidth = 300;
@@ -220,7 +238,7 @@ doc.moveDown(1);
     heading("TERMS AND CONDITIONS:");
     doc.font(regular).fillColor(gray).fontSize(normal).text(
       "Parties to these Terms and Conditions:\n\n" +
-      `i. Research Analyst: ., a SEBI Registered${COMPANY.NAME} Research Analyst (${COMPANY.SEBI.REG_NO}), with its registered office at Renuka Shobha FI 604 Sno., Chinchwad, Pune, Maharashtra.\n\n` +
+      `i. Research Analyst: ., a SEBI Registered ${COMPANY.NAME} Research Analyst (${COMPANY.SEBI.REG_NO}), with its registered office at ${COMPANY.ADDRESS}\n\n` +
       "ii. Client: The individual subscribing to or availing research services provided by the Research Analyst, hereinafter referred to as the 'Client'.",
       leftMargin, doc.y, { width, align: "justify", lineGap: 2 }
     );
