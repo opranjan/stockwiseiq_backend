@@ -49,7 +49,7 @@ async function generateInvoiceBuffer(submission) {
     const pad = 10;
 
     /* ================= HEADER ================= */
-    doc.rect(startX, y, pageWidth, 40).fill("#1e6091");
+    doc.rect(startX, y, pageWidth, 40).fill("#bd24df");
     doc
       .fillColor("#fff")
       .font("Helvetica-Bold")
