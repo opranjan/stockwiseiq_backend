@@ -15,7 +15,7 @@ const COMPANY = {
   },
 
   CONTACT: {
-    SUPPORT_EMAIL: "support@stockwiseiq.in",
+    SUPPORT_EMAIL: "info@stockwiseiq.in",
     REPORT_MOBILE: "+919082280240",
   },
 
