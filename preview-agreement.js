@@ -7,10 +7,19 @@ const { generateUserAgreementBuffer } = require("./services/agreement.service");
   try {
     console.log("⏳ Generating Agreement PDF preview...");
 
+
+
+       // 👉 Sample base64 signature (replace with your real one)
+    const signatureBase64 = fs.readFileSync(
+      path.join(__dirname, "signature.png")
+    ).toString("base64");
+
     const fakeSubmission = {
       fullName: "Akash Kumar",
       email: "akash@example.com",
       mobile: "9876543210",
+      'location' : "Sample City, Sample Region, Sample Country | Lat: 12.34, Lng: 56.78",
+       signature: `data:image/png;base64,${signatureBase64}`,
     };
 
     const ip = "103.224.67.12"; // fake IP

@@ -12,7 +12,7 @@ function formatDate(date) {
   });
 }
 
-async function generateUserAgreementBuffer(submission, ipAddress) {
+async function generateUserAgreementBuffer(submission, ipAddress ) {
   return new Promise((resolve) => {
     const doc = new PDFDocument({ size: "A4", margin: 55 });
     const chunks = [];
@@ -28,7 +28,7 @@ async function generateUserAgreementBuffer(submission, ipAddress) {
     const leftMargin = 60;
     const width = 480;
     const agreementDate = formatDate(new Date());
-    const { fullName, email, mobile } = submission;
+    const { fullName, email, mobile ,location } = submission;
 
     // ================= HEADER (only first page) =================
     // const headerHeight = 100;
@@ -198,12 +198,51 @@ doc.moveDown(1);
       doc.moveDown(0.6);
     }
 
+    // function section(title, content) {
+    //   if (title) doc.fillColor(blue).font(bold).fontSize(11).text(title, leftMargin);
+    //   doc.font(regular).fillColor(gray).fontSize(normal)
+    //     .text(content, leftMargin, doc.y + 2, { align: "justify", width, lineGap: 2 });
+    // //   if (doc.y > 720) { doc.addPage(); addFooter(); }
+    // }
+
+
+
     function section(title, content) {
-      if (title) doc.fillColor(blue).font(bold).fontSize(11).text(title, leftMargin);
-      doc.font(regular).fillColor(gray).fontSize(normal)
-        .text(content, leftMargin, doc.y + 2, { align: "justify", width, lineGap: 2 });
-    //   if (doc.y > 720) { doc.addPage(); addFooter(); }
-    }
+  const topMargin = 10;     // space before section
+  const bottomMargin = 12;  // space after section
+
+  // Top spacing
+  doc.moveDown(topMargin / normal);
+
+  if (title) {
+    doc
+      .fillColor(blue)
+      .font(bold)
+      .fontSize(11)
+      .text(title, leftMargin);
+    doc.moveDown(0.4); // small gap after title
+  }
+
+  doc
+    .font(regular)
+    .fillColor(gray)
+    .fontSize(normal)
+    .text(content, leftMargin, doc.y, {
+      align: "justify",
+      width,
+      lineGap: 2,
+    });
+
+  // Bottom spacing
+  doc.moveDown(bottomMargin / normal);
+
+  // Optional page break safety (recommended)
+  // if (doc.y > 720) {
+  //   doc.addPage();
+  //   addFooter();
+  // }
+}
+
 
     function addFooter() {
       const footerY = 780;
@@ -217,23 +256,29 @@ doc.moveDown(1);
     }
 
     // ================= PAGE 1 =================
-    heading("TERMS AND CONDITIONS:");
-    doc.font(regular).fillColor(gray).fontSize(normal).text(
-      "Parties to these Terms and Conditions:\n\n" +
-      `i. Research Analyst: ., a SEBI Registered ${COMPANY.NAME} Research Analyst (${COMPANY.SEBI.REG_NO}), with its registered office at ${COMPANY.ADDRESS}\n\n` +
-      "ii. Client: The individual subscribing to or availing research services provided by the Research Analyst, hereinafter referred to as the 'Client'.",
-      leftMargin, doc.y, { width, align: "justify", lineGap: 2 }
-    );
+ heading("TERMS AND CONDITIONS:");
+doc.font(regular).fillColor(gray).fontSize(normal).text(
+  "Parties to these Terms and Conditions:\n\n" +
+  "i. Research Analyst: Neha Sondhi, a SEBI Registered Research Analyst, holding Registration No. INH000018920, hereinafter referred to as the \"Research Analyst\" or \"RA\"; located at Sanpada, near Juinagar Railway Station, hereinafter referred to as the \"Research Analyst\" or \"RA\".\n\n" +
+  "ii. Client: The individual or entity subscribing to or availing research services provided by the Research Analyst, hereinafter referred to as the \"Client.\"",
+  leftMargin,
+  doc.y,
+  { width, align: "justify", lineGap: 2 }
+);
 
-    section(
-      "1. Availing The Services:",
-      "The Client hereby accepts the research services and confirms to avail the same at their discretion. The Research Analyst agrees to provide such services in accordance with SEBI (Research Analyst) Regulations, 2014."
-    );
 
-    section(
-      "2. Obligations on RA and Client:",
-      "Both the Client and RA shall comply with all applicable SEBI regulations, circulars, and amendments issued from time to time."
-    );
+   section(
+  "1. Availing The Services:",
+  "The Client hereby accepts the research services and confirms to avail the research services on its own discretion provided by the Research Analyst (\"RA\"), and the Research Analyst agrees to provide such services in accordance with the terms and conditions set forth underneath."
+);
+
+
+   section(
+  "2. Obligations on RA and Client:",
+  "The client and the Research Analyst shall be bound by all applicable regulations, rules, circulars, and amendments issued by SEBI, including the SEBI (Research Analysts) Regulations, 2014 and all the other notifications of the Government, if any from time to time."
+);
+
+
 
     addFooter();
 
@@ -243,42 +288,50 @@ doc.moveDown(1);
  // PAGE 2
 // doc.addPage();
 
+
 section(
   "3. Client Information and KYC:",
-  "The client is bound, upon acceptance of services, to submit all requisite documents as requested by the research analyst and help the RA to complete the KYC process. " +
+  "The client is bound, upon acceptance of services, to submit all requisite documents as requested by the research analyst and help the RA to complete the KYC process.\n\n" +
   "The client hereby gives consent to the research analyst to fetch his KYC documents from the KYC Registration Agency (KRA)."
 );
 
+
+
 section(
   "4. Standard Terms of Service:",
-  "The Client acknowledges and gives his consent to be bound by the terms set forth herewith, as well as any applicable amendments or updates provided by the Research Analyst.\n\n" +
-  "The client hereby agrees:\n" +
-  "1. I have read and understood the terms and conditions applicable to a research analyst as defined under regulation 2(1)(u) of the SEBI (Research Analyst) Regulations, 2014, including the fee structure.\n" +
+  "The client hereby agrees:\n\n" +
+  "1. I have read and understood the terms and conditions applicable to a research analyst as defined under regulation 2(1)(u) of the SEBI (Research Analyst) Regulations, 2014, including the fee structure.\n\n" +
   "2. I am subscribing to the research services for my own benefit and consumption, and any reliance placed on the research report provided by the Research Analyst shall be based on my own judgment and assessment of the conclusions contained in the research report.\n\n" +
-  "I understand that:\n" +
+  "3. All communication shall be conducted via WhatsApp. It shall be the sole responsibility of the client to review and verify all information provided.\n\n" +
+  "I understand that:\n\n" +
   "i. Any investment made based on the recommendations in the research report is subject to market risk.\n" +
   "ii. Recommendations in the research report do not provide any assurance of returns.\n" +
   "iii. There is no recourse to claim any losses incurred on investments made based on the recommendations in the research report.\n\n" +
   "Declaration by Research Analyst:\n" +
-  `1. It is duly registered with SEBI as an RA having Registration No.: ${COMPANY.SEBI.REG_NO}, Date of Registration: Mar 19, 2024.\n` +
+  "The Research Analyst further declares that,\n" +
+  "1. It is duly registered with SEBI as an RA having Registration No.: INH000018920.\n" +
   "2. It has registration and qualifications required to render the services contemplated under the RA Regulations, and the same are valid and subsisting.\n" +
   "3. The services provided by the RA do not conflict with or violate any provision of law, rule, regulation, contract, or other instrument to which it is a party or to which any of its property is or may be subject.\n" +
-  "4. The maximum fee that may be charged by the RA is Rs.1.51 lakhs per annum per family of clients.\n" +
+  "4. The maximum fee that may be charged by the RA is ₹1.51 lakhs per annum per family of clients.\n" +
   "5. The recommendations provided by the RA do not provide any assurance of returns.\n" +
   "6. The RA is not engaged in any additional professional or business activities on a full-time or executive capacity that may interfere with or influence the independence of the research report and/or recommendations."
 );
 
+
+
+
+
 section(
   "5. Consideration and Mode of Payment:",
   "1. The client shall duly pay the fees to the RA of the invoice raised or for any agreed amount either written/oral within 2 days.\n" +
-  "2. The Client agrees to make all payments via: UPI/Net banking/Payment Gateway or any other verified banking channel. Client shall not pay any fees in cash.\n" +
+  "2. The Client agrees to make all payments via: UPI/Netbanking/Payment Gateway or any other verified banking channel. Client shall not pay any fees in cash.\n" +
   "3. The Client hereby agrees to pay the fees in the Bank account of Research Analyst only. The RA shall not be liable for any payment made to third party account."
 );
 
 section(
   "6. Risk Factors:",
   "The Client understands that the services provided by the Research Analyst involve inherent risks, and the Client agrees to bear full responsibility for any financial or other consequences arising from the use of these services.\n\n" +
-  "Investment in the market is subject to market risk, and is also subject to the following:\n" +
+  "Investment in the market is subject to market risk, and is also subject to the following:\n\n" +
   "1. Trading in equities, derivatives, and other securities are subject to market risks and there is no assurance or guarantee of returns.\n" +
   "2. Past performance does not indicate future performance.\n" +
   "3. Research recommendations may not always be profitable, as actual market movements may differ from anticipated trends.\n" +
@@ -288,11 +341,9 @@ section(
 );
 
 
-    // addFooter();
 
-    // ================= PAGE 3 =================
-    // doc.addPage();
-   section(
+
+section(
   "7. Conflict of Interest:",
   "The RA shall adhere to the applicable regulations/circulars/directions specified by SEBI from time to time in relation to disclosure and mitigation of any actual or potential conflict of interest. Some of disclosures are as follows:\n\n" +
   "1. The Research Analyst or any of its officer/employee does not trade in securities which are subject matter of recommendation.\n" +
@@ -301,6 +352,15 @@ section(
   "Client is advised to refer the detailed disclosure provided on our website."
 );
 
+
+
+
+    addFooter();
+
+    // ================= PAGE 3 =================
+    // doc.addPage();
+
+
 section(
   "8. Termination of Service and Refund of Fees:",
   "The Agreement may be terminated by the client, if the Research Analyst fails to provide the research recommendations. However, the client cannot terminate the agreement solely based on not achieving the desired returns or incurring the losses from trading on the recommendations or the client discontinues the services without a valid reason, or in case of force majeure.\n\n" +
@@ -308,65 +368,219 @@ section(
   "In case of suspension of certificate of registration of the RA for more than 60 (sixty) days or cancellation of the RA registration, RA shall refund the fees, on a pro rata basis for the period from the effective date of cancellation/suspension to end of the subscription period."
 );
 
+
 section(
   "9. Grievance Redressal:",
   "In the event of grievances related to non-receipt of the research report, missing content, or deficiencies in services, the Client may raise a grievance. The Research Analyst will ensure Redressal within 7 days of such complaint.\n\n" +
   "The client is required to follow the following procedure for any grievance:\n\n" +
-  "Step 1: The client should first contact the RA at the contact details mentioned below:\n" +
-  `Contact No.: ${COMPANY.CONTACT.REPORT_MOBILE}\n` +
-  `Mail ID: ${ COMPANY.CONTACT.SUPPORT_EMAIL}n\n\n` +
-  "Step 2: In case, if the client is unsatisfied, he can lodge a complaint with the SEBI through SEBI's SCORES platform at www.scores.sebi.gov.in.\n" +
+  "Step 1: The client should first contact the RA at the details mentioned below:\n\n" +
+  "Mail ID: nehasondhi24@gmail.com\n\n" +
+  "Step 2: In case, if the client is unsatisfied, he can lodge a complaint with the SEBI through SEBI’s SCORES platform at www.scores.sebi.gov.in.\n\n" +
   "Step 3: The client can also consider to seek resolution through the Online Dispute Resolution (ODR) mechanism through SMART ODR Portal: https://smartodr.in.\n\n" +
   "DISCLAIMER: The client is strictly required to follow the procedure as mentioned above, otherwise the RA shall not be liable delay in resolution of the grievance.\n\n" +
-  "NOTE: Clients are advised to read the Do's and Don'ts for dealing with the Research Analyst, as mentioned in SEBI Master Circular No. SEBI/HO/MIRSD-POD-1/P/CIR/2024/49 dated May 21, 2024, or any updates provided by SEBI in the future.\n\n" +
+  "NOTE: Clients are advised to read the Do's and Don’ts for dealing with the Research Analyst, as mentioned in SEBI Master Circular No. SEBI/HO/MIRSD-POD-1/P/CIR/2024/49 dated May 21, 2024, or any updates provided by SEBI in the future.\n\n" +
   "The clients are requested to go through all the Disclaimers, Disclosures, Refund Policy and information as mentioned on its website."
 );
-    // addFooter();
+
+    addFooter();
 
     // ================= PAGE 4 =================
     // doc.addPage();
   // PAGE 4
 // doc.addPage();
 
+// section(
+//   "10. Most Important Terms and Conditions:",
+//   "1. These terms and conditions, and consent thereon are for the research services provided by the Research Analyst (RA) and RA cannot execute/carry out any trade (purchase/sell transaction) on behalf of, the client. Thus, the clients are advised not to permit RA to execute any trade on their behalf.\n\n" +
+//   "2. The fee charged by RA to the client will be subject to the maximum of amount prescribed by SEBI/Research Analyst Administration and Supervisory Body (RAASB) from time to time (applicable only for Individual and HUF Clients).\n\n" +
+//   "Note:\n" +
+//   "2.1. The current fee limit is Rs 1,51,000/- per annum per family of client for all research services of the RA.\n" +
+//   "2.2. The fee limit does not include statutory charges.\n" +
+//   "2.3. The fee limits do not apply to a non-individual client/accredited investor.\n\n" +
+//   "3. RA may charge fees in advance if agreed by the client. Such advance shall not exceed the period stipulated by SEBI; presently it is one year. In case of pre-mature termination of the RA services by either the client or the RA, the client shall be entitled to seek refund of proportionate fees only for unexpired period.\n\n" +
+//   "4. Fees to RA may be paid by the client through any of the specified modes like cheque, online bank transfer, UPI, etc. Cash payment is not allowed. Optionally the client can make payments through Centralized Fee Collection Mechanism (CeFCoM) managed by BSE Limited (i.e. currently recognized RAASB).\n\n" +
+//   "5. The RA is required to abide by the applicable regulations/circulars/directions specified by SEBI and RAASB from time to time in relation to disclosure and mitigation of any actual or potential conflict of interest. The RA will endeavor to promptly inform the client of any conflict of interest that may affect the services being rendered to the client.\n\n" +
+//   "6. Any assured/guaranteed/fixed returns schemes or any other schemes of similar nature are prohibited by law. No scheme of this nature shall be offered to the client by the RA.\n\n" +
+//   "7. The RA cannot guarantee returns, profits, accuracy, or risk-free investments from the use of the RA's research services. All opinions, projections, estimates of the RA are based on the analysis of available data under certain assumptions as of the date of preparation/publication of research report.\n\n" +
+//   "8. Any investment made based on recommendations in research reports are subject to market risks, and recommendations do not provide any assurance of returns. There is no recourse to claim any losses incurred on the investments made based on the recommendations in the research report. Any reliance placed on the research report provided by the RA shall be as per the client's own judgement and assessment of the conclusions contained in the research report.\n\n" +
+//   "9. The SEBI registration, Enlistment with RAASB, and NISM certification do not guarantee the performance of the RA or assure any returns to the client.\n\n" +
+//   "10. For any grievances:\n" +
+//   "Step 1: The client should first contact the RA using the details mentioned herewith:\n" +
+//   "Contact No.: +919082280240\n" +
+//   `Mail ID: ${COMPANY.CONTACT.SUPPORT_EMAIL}\n` +
+//   "Step 2: If the resolution is unsatisfactory, the client can also lodge grievances through SEBI's SCORES platform at www.scores.sebi.gov.in\n" +
+//   "Step 3: The client may also consider the Online Dispute Resolution (ODR) through the Smart ODR portal at https://smartodr.in\n\n" +
+//   "11. Clients are required to keep contact details, including email id and mobile number/s updated with the RA at all times.\n\n" +
+//   "12. The RA shall never ask for the client's login credentials and OTPs for the client's Trading Account, Demat Account and Bank Account. Never share such information with anyone including RA."
+// );
+
+
+
+// ================= SECTION 10 =================
+
 section(
   "10. Most Important Terms and Conditions:",
-  "1. These terms and conditions, and consent thereon are for the research services provided by the Research Analyst (RA) and RA cannot execute/carry out any trade (purchase/sell transaction) on behalf of, the client. Thus, the clients are advised not to permit RA to execute any trade on their behalf.\n\n" +
-  "2. The fee charged by RA to the client will be subject to the maximum of amount prescribed by SEBI/Research Analyst Administration and Supervisory Body (RAASB) from time to time (applicable only for Individual and HUF Clients).\n\n" +
+  "1. These terms and conditions, and consent thereon are for the research services provided by the Research Analyst (RA) and RA cannot execute/carry out any trade (purchase/sell transaction) on behalf of the client. Thus, the clients are advised not to permit RA to execute any trade on their behalf.\n\n" +
+  "2. The fee charged by RA to the client will be subject to the maximum amount prescribed by SEBI / Research Analyst Administration and Supervisory Body (RAASB) from time to time (applicable only for Individual and HUF Clients).\n\n" +
   "Note:\n" +
   "2.1. The current fee limit is Rs 1,51,000/- per annum per family of client for all research services of the RA.\n" +
   "2.2. The fee limit does not include statutory charges.\n" +
-  "2.3. The fee limits do not apply to a non-individual client/accredited investor.\n\n" +
+  "2.3. The fee limits do not apply to a non-individual client / accredited investor.\n\n" +
   "3. RA may charge fees in advance if agreed by the client. Such advance shall not exceed the period stipulated by SEBI; presently it is one year. In case of pre-mature termination of the RA services by either the client or the RA, the client shall be entitled to seek refund of proportionate fees only for unexpired period.\n\n" +
-  "4. Fees to RA may be paid by the client through any of the specified modes like cheque, online bank transfer, UPI, etc. Cash payment is not allowed. Optionally the client can make payments through Centralized Fee Collection Mechanism (CeFCoM) managed by BSE Limited (i.e. currently recognized RAASB).\n\n" +
-  "5. The RA is required to abide by the applicable regulations/circulars/directions specified by SEBI and RAASB from time to time in relation to disclosure and mitigation of any actual or potential conflict of interest. The RA will endeavor to promptly inform the client of any conflict of interest that may affect the services being rendered to the client.\n\n" +
-  "6. Any assured/guaranteed/fixed returns schemes or any other schemes of similar nature are prohibited by law. No scheme of this nature shall be offered to the client by the RA.\n\n" +
-  "7. The RA cannot guarantee returns, profits, accuracy, or risk-free investments from the use of the RA's research services. All opinions, projections, estimates of the RA are based on the analysis of available data under certain assumptions as of the date of preparation/publication of research report.\n\n" +
-  "8. Any investment made based on recommendations in research reports are subject to market risks, and recommendations do not provide any assurance of returns. There is no recourse to claim any losses incurred on the investments made based on the recommendations in the research report. Any reliance placed on the research report provided by the RA shall be as per the client's own judgement and assessment of the conclusions contained in the research report.\n\n" +
+  "4. Fees to RA may be paid by the client through any of the specified modes like cheque, online bank transfer, UPI, etc. Cash payment is not allowed. Optionally, the client can make payments through Centralized Fee Collection Mechanism (CeFCoM) managed by BSE Limited (i.e. currently recognized RAASB).\n\n" +
+  "5. The RA is required to abide by the applicable regulations / circulars / directions specified by SEBI and RAASB from time to time in relation to disclosure and mitigation of any actual or potential conflict of interest. The RA will endeavor to promptly inform the client of any conflict of interest that may affect the services being rendered to the client.\n\n" +
+  "6. Any assured / guaranteed / fixed returns schemes or any other schemes of similar nature are prohibited by law. No scheme of this nature shall be offered to the client by the RA.\n\n" +
+  "7. The RA cannot guarantee returns, profits, accuracy, or risk-free investments from the use of the RA’s research services. All opinions, projections, and estimates of the RA are based on the analysis of available data under certain assumptions as of the date of preparation / publication of the research report.\n\n" +
+  "8. Any investment made based on recommendations in research reports are subject to market risks, and recommendations do not provide any assurance of returns. There is no recourse to claim any losses incurred on the investments made based on the recommendations in the research report. Any reliance placed on the research report provided by the RA shall be as per the client’s own judgement and assessment of the conclusions contained in the research report.\n\n" +
   "9. The SEBI registration, Enlistment with RAASB, and NISM certification do not guarantee the performance of the RA or assure any returns to the client.\n\n" +
-  "10. For any grievances:\n" +
-  "Step 1: The client should first contact the RA using the details mentioned herewith:\n" +
-  "Contact No.: +919082280240\n" +
-  `Mail ID: ${COMPANY.CONTACT.SUPPORT_EMAIL}\n` +
-  "Step 2: If the resolution is unsatisfactory, the client can also lodge grievances through SEBI's SCORES platform at www.scores.sebi.gov.in\n" +
-  "Step 3: The client may also consider the Online Dispute Resolution (ODR) through the Smart ODR portal at https://smartodr.in\n\n" +
-  "11. Clients are required to keep contact details, including email id and mobile number/s updated with the RA at all times.\n\n" +
-  "12. The RA shall never ask for the client's login credentials and OTPs for the client's Trading Account, Demat Account and Bank Account. Never share such information with anyone including RA."
+  "10. For any grievances, the client should follow the procedure mentioned below."
 );
+
+
+
 
 // addFooter();
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // PAGE 5
-// doc.addPage();
+doc.addPage();
+
+
+
+// ================= GRIEVANCE TABLE =================
+
+doc.moveDown(1);
+
+const tableTop = doc.y;
+const rowHeight = 30;
+
+// Column widths (total = width)
+const colWidths = {
+  designation: 120,
+  name: 160,
+  contact: 90,
+  email: 110,
+};
+
+const colX = {
+  designation: leftMargin,
+  name: leftMargin + colWidths.designation,
+  contact: leftMargin + colWidths.designation + colWidths.name,
+  email:
+    leftMargin +
+    colWidths.designation +
+    colWidths.name +
+    colWidths.contact,
+};
+
+// -------- Header Row --------
+doc.font(bold).fontSize(10);
+
+// Header background
+doc
+  .rect(leftMargin, tableTop - 6, width, rowHeight)
+  .fill("#f3f4f6")
+  .stroke("#ccc");
+
+doc.fillColor(gray);
+
+doc.text("Designation", colX.designation + 4, tableTop, {
+  width: colWidths.designation - 8,
+});
+doc.text("Contact Person Name", colX.name + 4, tableTop, {
+  width: colWidths.name - 8,
+});
+doc.text("Contact No.", colX.contact + 4, tableTop, {
+  width: colWidths.contact - 8,
+});
+doc.text("Email ID", colX.email + 4, tableTop, {
+  width: colWidths.email - 8,
+});
+
+// -------- Table Rows --------
+const grievanceRows = [
+  ["Customer Care", "Neha Vijay Sondhi", "8169002642", "nehasondhi24@gmail.com"],
+  ["Head of Customer Care", "Neha Vijay Sondhi", "8169002642", "nehasondhi24@gmail.com"],
+  ["Compliance Officer", "Neha Vijay Sondhi", "8169002642", "nehasondhi24@gmail.com"],
+  ["CEO", "Neha Vijay Sondhi", "8169002642", "nehasondhi24@gmail.com"],
+  ["Principal Officer", "Neha Vijay Sondhi", "8169002642", "nehasondhi24@gmail.com"],
+];
+
+doc.font(regular).fontSize(10);
+
+grievanceRows.forEach((row, i) => {
+  const y = tableTop + rowHeight * (i + 1);
+
+  // Page break safety
+  if (y + rowHeight > 740) {
+    doc.addPage();
+  }
+
+  // Row border
+  doc
+    .rect(leftMargin, y - 2, width, rowHeight)
+    .strokeColor("#ddd")
+    .stroke();
+
+  doc.text(row[0], colX.designation + 4, y, {
+    width: colWidths.designation - 8,
+  });
+  doc.text(row[1], colX.name + 4, y, {
+    width: colWidths.name - 8,
+  });
+  doc.text(row[2], colX.contact + 4, y, {
+    width: colWidths.contact - 8,
+  });
+  doc.text(row[3], colX.email + 4, y, {
+    width: colWidths.email - 8,
+  });
+});
+
+doc.moveDown(2);
+
+// ================= STEP 2 & 3 =================
+
+doc.font(regular).fontSize(normal).fillColor(gray).text(
+  "Step 2: If the resolution is unsatisfactory, the client can also lodge grievances through SEBI’s SCORES platform at www.scores.sebi.gov.in.\n\n" +
+  "Step 3: The client may also consider the Online Dispute Resolution (ODR) through the Smart ODR portal at https://smartodr.in.\n\n" +
+  "11. Clients are required to keep contact details, including email id and mobile number(s), updated with the RA at all times.\n\n" +
+  "12. The RA shall never ask for the client’s login credentials and OTPs for the client’s Trading Account, Demat Account, and Bank Account. Never share such information with anyone including the RA.",
+  leftMargin,
+  doc.y,
+  { width, align: "justify" }
+);
+
+
+
+
+
+
 
 section(
   "11. Optional Centralised Fee Collection Mechanism:",
   "There is an optional 'Centralized Fee Collection Mechanism for Investment Advisors and Research Analysts' (CeFCoM) for fee payments. The Research Analyst has presently not opted for the same and once the Research Analyst gets registered for it, then thereafter said mechanism will be available for the client."
 );
 
+
 section(
   "12. Confidentiality:",
   "Client shall not share any confidential information with third party without prior consent from the RA which has come to its knowledge."
 );
+
 
 section(
   "13. Dispute:",
@@ -374,10 +588,12 @@ section(
   "Any Disputes between the parties shall be resolved through arbitration or other methods mutually agreed upon, in accordance with applicable legal and regulatory guidelines."
 );
 
+
 section(
   "14. Severability:",
   "If any provision of this Terms and Conditions is found to be invalid, illegal, or unenforceable, the remaining provisions will remain in full effect, provided the essential purpose of the Terms and Conditions is not undermined."
 );
+
 
 section(
   "15. Force Majeure:",
@@ -390,11 +606,12 @@ section(
 
 
 
+
     // ================= CONSENT & ACCEPTANCE =================
 heading("CONSENT & ACCEPTANCE:");
 
 const consentTop = doc.y + 18;
-const consentHeight = 230;
+const consentHeight = 250;
 
 // Outer card
 doc
@@ -417,7 +634,7 @@ doc
   .text(
     `I, ${fullName}, acknowledge that I have read and agree to the complete Terms & Conditions set forth by ${COMPANY.NAME} as of ${agreementDate}.`,
     leftMargin + 18,
-    consentTop + 18,
+    consentTop + 8,
     {
       width: width - 36,
       align: "justify",
@@ -426,7 +643,7 @@ doc
   );
 
 // Divider line
-const dividerY = consentTop + 80;
+const dividerY = consentTop + 50;
 doc
   .moveTo(leftMargin + 18, dividerY)
   .lineTo(leftMargin + width - 18, dividerY)
@@ -451,7 +668,9 @@ doc
   .text("Name:", leftMargin + 18, sigTop)
   .text("Email:", leftMargin + 18, sigTop + 22)
   .text("Signed at:", leftMargin + 18, sigTop + 44)
-  .text("IP Address:", leftMargin + 18, sigTop + 66);
+  .text("IP Address:", leftMargin + 18, sigTop + 66)
+   .text("Address:", leftMargin + 18, sigTop + 88)
+    .text("signature:", leftMargin + 18, sigTop + 125)
 
 
 
@@ -466,17 +685,12 @@ if (submission.signature) {
 
     const signatureBuffer = Buffer.from(base64Data, "base64");
 
-    doc.image(signatureBuffer, leftMargin + 100, sigTop + 70, {
-      width: 180,
-      height: 60,
+    doc.image(signatureBuffer, leftMargin + 120, sigTop+30 + 70, {
+      width: 60,
+      // height: 60,
       align: "left",
     });
 
-    // Optional label
-    doc
-      .fontSize(9)
-      .fillColor("#555")
-      .text("Client Signature", leftMargin + 120, sigTop + 165);
   } catch (err) {
     console.error("❌ Failed to render signature:", err);
   }
@@ -493,7 +707,8 @@ doc
   .text(fullName, leftMargin + 120, sigTop)
   .text(email, leftMargin + 120, sigTop + 22)
   .text(agreementDate, leftMargin + 120, sigTop + 44)
-  .text(ipAddress || "Not Captured", leftMargin + 120, sigTop + 66);
+  .text(ipAddress || "Not Captured", leftMargin + 120, sigTop + 66)
+  .text(location || "Not Captured", leftMargin + 120, sigTop + 88);
 
 // Note (subtle)
 doc.moveDown(9);
@@ -515,7 +730,7 @@ doc.moveDown(3);
 
 
      // === FINAL CLOSING SECTION ===
-const footerTop = doc.y ;
+const footerTop = doc.y -20 ;
 const footerPadding = 12;
 const footerBoxHeight = 95;
 const footerLeft = leftMargin;
