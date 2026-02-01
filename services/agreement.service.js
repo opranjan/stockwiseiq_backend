@@ -670,7 +670,7 @@ doc
   .text("Signed at:", leftMargin + 18, sigTop + 44)
   .text("IP Address:", leftMargin + 18, sigTop + 66)
    .text("Address:", leftMargin + 18, sigTop + 88)
-    .text("signature:", leftMargin + 18, sigTop + 125)
+    .text("signature:", leftMargin + 18, sigTop + 108)
 
 
 
@@ -686,7 +686,7 @@ if (submission.signature) {
     const signatureBuffer = Buffer.from(base64Data, "base64");
 
     doc.image(signatureBuffer, leftMargin + 120, sigTop+30 + 70, {
-      width: 60,
+      width: 120,
       // height: 60,
       align: "left",
     });
