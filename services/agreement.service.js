@@ -675,26 +675,61 @@ doc
 
 
 
-    // ================= SIGNATURE IMAGE (BASE64) =================
+//     // ================= SIGNATURE IMAGE (BASE64) =================
+// if (submission.signature) {
+//   try {
+//     const base64Data = submission.signature.replace(
+//       /^data:image\/png;base64,/,
+//       ""
+//     );
+
+//     const signatureBuffer = Buffer.from(base64Data, "base64");
+
+//     doc.image(signatureBuffer, leftMargin + 120, sigTop+30 + 70, {
+//       width: 120,
+//       // height: 60,
+//       align: "left",
+//     });
+
+//   } catch (err) {
+//     console.error("❌ Failed to render signature:", err);
+//   }
+// }
+
+
+
+
+// ================= SIGNATURE IMAGE (BASE64) =================
 if (submission.signature) {
   try {
-    const base64Data = submission.signature.replace(
-      /^data:image\/png;base64,/,
-      ""
-    );
+    if (
+      typeof submission.signature !== "string" ||
+      !submission.signature.startsWith("data:image")
+    ) {
+      throw new Error("Invalid signature format");
+    }
+
+    // Remove data:image/...;base64,
+    const base64Data = submission.signature
+      .replace(/^data:image\/\w+;base64,/, "")
+      .trim();
+
+    if (!base64Data) {
+      throw new Error("Empty signature base64");
+    }
 
     const signatureBuffer = Buffer.from(base64Data, "base64");
 
-    doc.image(signatureBuffer, leftMargin + 120, sigTop+30 + 70, {
+    doc.image(signatureBuffer, leftMargin + 120, sigTop + 100, {
       width: 120,
-      // height: 60,
       align: "left",
     });
 
   } catch (err) {
-    console.error("❌ Failed to render signature:", err);
+    console.error("❌ Failed to render signature:", err.message);
   }
 }
+
 
 
 
