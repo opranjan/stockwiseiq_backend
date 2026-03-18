@@ -57,7 +57,7 @@ function welcomeEmailTemplate({
   <p><strong>Mandatory KYC:</strong> All clients are required to complete the KYC process before availing any of our services.</p>
 
   <p><strong>No Return Assurances:</strong> We do not promise or guarantee profits, nor do we provide assured return schemes. 
-  If anyone offers such claims in our name, kindly report it immediately at <strong>+91-8169002642</strong>.</p>
+  If anyone offers such claims in our name, kindly report it immediately at <strong>+91-9619058820</strong>.</p>
 
   <p><strong>Payment Safety:</strong> Service fees must be paid only to the bank account published on our official website. 
   Never transfer funds to any personal account. If such a request is made, please notify us immediately.</p>

@@ -513,11 +513,11 @@ doc.text("Email ID", colX.email + 4, tableTop, {
 
 // -------- Table Rows --------
 const grievanceRows = [
-  ["Customer Care", "Neha Vijay Sondhi", "8169002642", "nehasondhi24@gmail.com"],
-  ["Head of Customer Care", "Neha Vijay Sondhi", "8169002642", "nehasondhi24@gmail.com"],
-  ["Compliance Officer", "Neha Vijay Sondhi", "8169002642", "nehasondhi24@gmail.com"],
-  ["CEO", "Neha Vijay Sondhi", "8169002642", "nehasondhi24@gmail.com"],
-  ["Principal Officer", "Neha Vijay Sondhi", "8169002642", "nehasondhi24@gmail.com"],
+  ["Customer Care", "Neha Vijay Sondhi", "9619058820", "nehasondhi24@gmail.com"],
+  ["Head of Customer Care", "Neha Vijay Sondhi", "9619058820", "nehasondhi24@gmail.com"],
+  ["Compliance Officer", "Neha Vijay Sondhi", "9619058820", "nehasondhi24@gmail.com"],
+  ["CEO", "Neha Vijay Sondhi", "9619058820", "nehasondhi24@gmail.com"],
+  ["Principal Officer", "Neha Vijay Sondhi", "9619058820", "nehasondhi24@gmail.com"],
 ];
 
 doc.font(regular).fontSize(10);
