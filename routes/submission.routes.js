@@ -1,5 +1,11 @@
 const router = require("express").Router();
-const { uploadFields, submit, getSubmissions, getSubmissionById } = require("../controllers/submission.controller");
+const {
+  uploadFields,
+  submit,
+  getSubmissions,
+  getSubmissionById,
+  softDeleteSubmission,
+} = require("../controllers/submission.controller");
 
 
 // Health
@@ -14,6 +20,9 @@ router.get("/userkyc/", getSubmissions);
 
 // GET – single submission
 router.get("/userkyc/:id", getSubmissionById);
+
+// DELETE – soft delete submission
+router.delete("/userkyc/:id", softDeleteSubmission);
 
 
 

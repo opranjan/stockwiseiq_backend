@@ -138,6 +138,7 @@ async function getSubmissions(req, res) {
     const query = {
       ...searchQuery,
       ...dateQuery,
+      isDeleted: { $ne: true },
     };
 
     const [data, total] = await Promise.all([
@@ -173,7 +174,7 @@ async function getSubmissionById(req, res) {
   try {
     const { id } = req.params;
 
-    const submission = await Submission.findById(id);
+    const submission = await Submission.findOne({ _id: id, isDeleted: { $ne: true } });
     if (!submission) {
       return res.status(404).json({
         ok: false,
@@ -194,4 +195,36 @@ async function getSubmissionById(req, res) {
   }
 }
 
-module.exports = { uploadFields, submit, getSubmissions, getSubmissionById };
+// Soft delete submission
+async function softDeleteSubmission(req, res) {
+  try {
+    const { id } = req.params;
+
+    const submission = await Submission.findOneAndUpdate(
+      { _id: id, isDeleted: { $ne: true } },
+      { $set: { isDeleted: true, deletedAt: new Date() } },
+      { new: true }
+    );
+
+    if (!submission) {
+      return res.status(404).json({
+        ok: false,
+        message: "Submission not found or already deleted",
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      message: "Submission deleted",
+      data: { _id: submission._id, deletedAt: submission.deletedAt },
+    });
+  } catch (err) {
+    console.error("❌ Soft delete submission error:", err);
+    return res.status(500).json({
+      ok: false,
+      message: "Failed to delete submission",
+    });
+  }
+}
+
+module.exports = { uploadFields, submit, getSubmissions, getSubmissionById, softDeleteSubmission };

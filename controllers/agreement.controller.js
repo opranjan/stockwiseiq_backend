@@ -75,9 +75,6 @@ function getClientLocation(req) {
 
 
 
-
-
-
 async function sendAgreementEmail(req, res) {
   try {
    const { email, signatureBase64 } = req.body;
